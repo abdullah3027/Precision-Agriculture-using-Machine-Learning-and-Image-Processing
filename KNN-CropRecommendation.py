@@ -7,6 +7,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
+from sklearn import tree
+from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import normalize
 
@@ -97,12 +99,12 @@ def node_process():
 
         # evaluate the model and update the accuracies list
         score = model.score(X_val, y_val)
-        print("k=%d, accuracy=%.2f%%" % (k, score * 100))
+        # print("k=%d, accuracy=%.2f%%" % (k, score * 100))
         accuracies.append(score)
 
     # find the value of k that has the largest accuracy
     i = int(np.argmax(accuracies))
-    print("k=%d achieved highest accuracy of %.2f%% on validation data" % (kVals[i],accuracies[i] * 100))
+    # print("k=%d achieved highest accuracy of %.2f%% on validation data" % (kVals[i],accuracies[i] * 100))
 
     model = KNeighborsClassifier(n_neighbors=kVals[i])
     model.fit(X_train, y_train)
@@ -110,12 +112,33 @@ def node_process():
 
     # show a final classification report demonstrating the accuracy of the classifier
     # for each of the digits
-    print("EVALUATION ON TESTING DATA")
-    ev = pd.DataFrame({'Original values': y_test, 'Predicted values': predictions})
-    print(ev)
+    print("EVALUATION ON TESTING DATA FOR KNN\n")
+    # ev = pd.DataFrame({'Original values': y_test, 'Predicted values': predictions})
+    # print(ev)
+    knn_score = model.score(X_test, y_test)
     print(classification_report(y_test, predictions))
+    print(f'KNN model accuracy score : {knn_score*100}\n')
 
-    #return pca.n_components
+    # Implementation of Decision Trees Algorithm
+    dt_clf = tree.DecisionTreeClassifier()
+    dt_clf = dt_clf.fit(X_train, y_train)
+    dt_score = dt_clf.score(X_test, y_test)
+    print("EVALUATION ON TESTING DATA FOR DECISION TREES\n")
+    dt_predictions = dt_clf.predict(X_test)
+    print(classification_report(y_test, dt_predictions))
+    print(f'Decision Tree model accuracy score : {dt_score*100}\n')
+
+    # Implementation of Support Vector Machine
+    svm_clf = SVC(C=1, kernel='linear')
+    svm_clf = svm_clf.fit(X_train, y_train)
+    svm_score = svm_clf.score(X_test, y_test)
+    print("EVALUATION ON TESTING DATA FOR SVM\n")
+    svm_predictions = svm_clf.predict(X_test)
+    print(classification_report(y_test, svm_predictions))
+    print(f'SVM model accuracy score : {svm_score*100}\n')
+
+
+    # return pca.n_components
 '''
 def transmission_fn(some_data):
     # take the data and transmit it through the channel
