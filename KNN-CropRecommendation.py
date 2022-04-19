@@ -120,7 +120,7 @@ def node_process():
     print(f'KNN model accuracy score : {knn_score*100}\n')
 
     # Implementation of Decision Trees Algorithm
-    dt_clf = tree.DecisionTreeClassifier()
+    dt_clf = tree.DecisionTreeClassifier(splitter='random',max_depth=3)
     dt_clf = dt_clf.fit(X_train, y_train)
     dt_score = dt_clf.score(X_test, y_test)
     print("EVALUATION ON TESTING DATA FOR DECISION TREES\n")
